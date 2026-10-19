@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 type VercelConfig = {
+  framework?: string | null;
   outputDirectory: string;
   headers: { source: string; headers: { key: string; value: string }[] }[];
 };
@@ -15,6 +16,7 @@ describe("static release configuration", () => {
     const contentSecurityPolicy = headers.get("content-security-policy") ?? "";
     const connectSource = /(?:^|;)\s*connect-src ([^;]+)/.exec(contentSecurityPolicy)?.[1];
 
+    expect(config.framework).toBeNull();
     expect(config.outputDirectory).toBe("out");
     expect(rules).toBeDefined();
     expect(headers.get("x-content-type-options")).toBe("nosniff");
